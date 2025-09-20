@@ -17,7 +17,9 @@ AIMaP will follow the complete data science lifecycle: **data collection, cleani
 - Extend classification to **malware families** using multiclass models.  
 - Provide **explainability** through feature importance and visualizations.  
 - Deliver results in a **clean, reproducible pipeline** hosted on GitHub.  
-- Deploy a web demo for file prediction.  
+- Deploy a web demo for file upload, and get
+  -  Probability: 92% malicious
+  -  Predicted Family: Trojan (confidence 81%)
 
 ---
 
@@ -61,14 +63,3 @@ Planned visualizations:
 - Train/test split: **80% / 20%**.  
 - Cross-validation + AUC as main metric.  
 - Per-family evaluation for multiclass model.   
-
----
-
-## ⚙️ Deliverables  
-- 📄 **README.md** (proposal, midterm, final report).  
-- 🧑‍💻 Scripts / notebooks for data prep, modeling, and evaluation.  
-- 📊 Visualizations (ROC, confusion matrices, feature importance).  
-- 🎥 Midterm + Final presentation videos.  
-- *(Optional)* Streamlit demo to upload a file and get:  
-  - Probability: 92% malicious
-  - Predicted Family: Trojan (confidence 81%)
