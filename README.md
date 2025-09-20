@@ -38,14 +38,18 @@ Features include:
 ---
 
 ## 🧠 Modeling Approach  
-- **Binary classification** → Malware vs Benign (LightGBM/XGBoost).  
-- **Multiclass classification** → Malware family prediction for malicious samples.  
-- Baselines: Logistic Regression, Random Forest.  
-- Main models: Gradient Boosting (LightGBM/XGBoost).  
 
-**Evaluation Metrics**:  
-- Binary: AUC, Accuracy, Precision, Recall, F1, Confusion Matrix.  
-- Multiclass: Accuracy, Macro F1, Confusion Matrix.  
+- **Binary Classification → Malware vs Benign**  
+  - **Supervised Learning** using LightGBM/XGBoost.  
+  - *(Optional extension)* **Unsupervised Learning** using methods such as One-Class SVM, Isolation Forest, or Autoencoders, to detect anomalies without explicit malware labels.  
+
+- **Multiclass Classification → Malware Family Prediction (for malicious samples)**  
+  - **Supervised Learning** using LightGBM/XGBoost.  
+  - Baselines will include Logistic Regression and Random Forest for comparison.  
+
+- **Evaluation Metrics:**  
+  - **Binary:** AUC, Accuracy, Precision, Recall, F1, Confusion Matrix.  
+  - **Multiclass:** Accuracy, Macro F1, Confusion Matrix.  
 
 ---
 
