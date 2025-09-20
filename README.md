@@ -6,7 +6,7 @@
 - 🔍 Predict the probability that a file is malicious.  
 - 🧩 If malicious, classify which **malware family** (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.  
 
-This project represents the defender’s counterpart to <a href="https://github.com/EndritShaqiri/AIMaL" target="_blank">**AIMaL**</a> (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
+This project represents the defender’s counterpart to [**AIMaL**](https://github.com/EndritShaqiri/AIMaL) (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
 
 AIMaP will follow the complete data science lifecycle: **data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment** of a lightweight demo interface.  
 
