@@ -41,7 +41,7 @@ Features include:
 
 - **Binary Classification → Malware vs Benign**  
   - **Supervised Learning** using LightGBM/XGBoost.  
-  - *(Optional extension)* **Unsupervised Learning** using methods such as One-Class SVM, Isolation Forest, or Autoencoders, to detect anomalies without explicit malware labels.  
+  - *(Optional extension)* **Unsupervised Learning** using methods such as One-Class SVM, or Isolation Forest.
 
 - **Multiclass Classification → Malware Family Prediction (for malicious samples)**  
   - **Supervised Learning** using LightGBM/XGBoost.  
