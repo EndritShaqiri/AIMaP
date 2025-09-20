@@ -81,5 +81,5 @@ Planned visualizations:
 - 📊 Visualizations (ROC, confusion matrices, feature importance).  
 - 🎥 Midterm + Final presentation videos.  
 - *(Optional)* Streamlit demo to upload a file and get:  
-- Probability: 92% malicious
-- Predicted Family: Trojan (confidence 81%)
+  - Probability: 92% malicious
+  - Predicted Family: Trojan (confidence 81%)
