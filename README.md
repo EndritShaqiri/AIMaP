@@ -6,7 +6,7 @@
 - 🔍 Predict the probability that a file is malicious.  
 - 🧩 If malicious, classify which **malware family** (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.  
 
-This project represents the defender’s counterpart to **AIMaL** (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
+This project represents the defender’s counterpart to [**AIMaL**](https://github.com/EndritShaqiri/AIMaL) (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
 
 AIMaP will follow the complete data science lifecycle: **data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment** of a lightweight demo interface.  
 
@@ -17,14 +17,14 @@ AIMaP will follow the complete data science lifecycle: **data collection, cleani
 - Extend classification to **malware families** using multiclass models.  
 - Provide **explainability** through feature importance and visualizations.  
 - Deliver results in a **clean, reproducible pipeline** hosted on GitHub.  
-- *(Optional)* Deploy a simple **Streamlit web demo** for file prediction.  
+- Deploy a web demo for file prediction.  
 
 ---
 
 ## 📊 Data Collection  
 Datasets to be used:  
 
-- **EMBER 2018** → ~1.1M PE samples with extracted static features for binary classification (malware vs benign).  
+- **EMBER** → ~2M PE samples with extracted static features for binary classification (malware vs benign).  
 - **BODMAS** → 57K malware + 77K benign PE files, labeled by family, with features and metadata.  
 
 Features include:  
@@ -60,18 +60,7 @@ Planned visualizations:
 ## 🧪 Test Plan  
 - Train/test split: **80% / 20%**.  
 - Cross-validation + AUC as main metric.  
-- Per-family evaluation for multiclass model.  
-- Compare performance across EMBER and BODMAS.  
-
----
-
-## 🗓️ Timeline  
-- **Week 1–2** → Dataset collection, exploration, cleaning.  
-- **Week 3–4** → Baseline models for binary detection.  
-- **Week 5–6** → LightGBM/XGBoost binary classifier.  
-- **Week 7** → Extend to malware family classification.  
-- **Week 8–9** → Visualizations, feature importance, testing.  
-- **Week 10** → Final polish, documentation, presentation prep.  
+- Per-family evaluation for multiclass model.   
 
 ---
 
