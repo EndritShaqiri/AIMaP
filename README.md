@@ -1,112 +1,90 @@
-\section*{🛡️ AIMaP – Artificially Intelligent Malware Predictor}
+# 🛡️ AIMaP – Artificially Intelligent Malware Predictor  
 
-\subsection*{📌 Project Description}
-\textbf{AIMaP} (Artificially Intelligent Malware Predictor) is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and:
-\begin{itemize}
-    \item Predict the probability that a file is malicious.
-    \item If malicious, classify which \textbf{malware family} (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.
-\end{itemize}
+## 📌 Project Description  
+**AIMaP** (Artificially Intelligent Malware Predictor) is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and:  
 
-This project represents the defender’s counterpart to \href{https://github.com/EndritShaqiri/AIMaL}{\textbf{AIMaL}} (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to \textbf{detect and label malicious files} with high accuracy. The workflow follows the complete data science lifecycle: \textit{data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment} of a lightweight demo interface.
+- 🔍 Predict the probability that a file is malicious.  
+- 🧩 If malicious, classify which **malware family** (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.  
 
----
-
-\subsection*{🎯 Goals}
-\begin{itemize}
-    \item Train ML models to output a \textbf{malicious probability} for unknown files.
-    \item Extend classification to \textbf{malware families} using multiclass models.
-    \item Provide \textbf{explainability} through feature importance and visualization.
-    \item Deliver results in a \textbf{clean, reproducible pipeline} hosted on GitHub.
-    \item Deploy a web demo for file upload that outputs:
-    \begin{itemize}
-        \item Probability: 92\% malicious
-        \item Predicted Family: Trojan (confidence 81\%)
-    \end{itemize}
-\end{itemize}
+This project represents the defender’s counterpart to [**AIMaL**](https://github.com/EndritShaqiri/AIMaL).  
+Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
+It follows the complete data-science lifecycle: *data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment* of a lightweight demo interface.
 
 ---
 
-\subsection*{📊 Data Collection}
-Datasets to be used:
-\begin{itemize}
-    \item \textbf{BODMAS} – 57K malware + 77K benign PE files, labeled by family, with extracted features and metadata.  
-          \href{https://whyisyoung.github.io/BODMAS/}{(whyisyoung.github.io/BODMAS)}
-    \item \textbf{EMBER} – $\sim$2M PE samples with extracted static features for binary classification (malware vs. benign).  
-          \href{https://github.com/elastic/ember}{(github.com/elastic/ember)}
-\end{itemize}
-
-\textbf{Planned usage:}  
-Due to computational constraints, the initial training phase will use only the \textbf{BODMAS dataset} (≈130K samples).  
-If resources permit, a secondary phase will incorporate about \textbf{10\% of EMBER} (≈200K samples, balanced 50\% benign / 50\% malware) to enhance robustness and cross-dataset generalization.
-
-\textbf{Features (predictor variables):}
-\begin{itemize}
-    \item File metadata (size, entropy, virtual size)
-    \item Imported functions and libraries
-    \item Section-level features (names, sizes, entropies)
-    \item String statistics (count, average length, entropy)
-\end{itemize}
-
-\textbf{Target variables:}
-\begin{itemize}
-    \item \textbf{Binary classification:} \texttt{malicious\_label} (1 = malware, 0 = benign)
-    \item \textbf{Multiclass classification:} \texttt{malware\_family} (e.g., Trojan, Ransomware, Backdoor, Worm)
-\end{itemize}
+## 🎯 Goals  
+- Train ML models to output **malicious probability** for unknown files.  
+- Extend classification to **malware families** using multiclass models.  
+- Provide **explainability** through feature importance and visualizations.  
+- Deploy a web demo for file upload that returns, for example:  
+  - Probability: 92% malicious  
+  - Predicted Family: Trojan (confidence 81%)  
 
 ---
 
-\subsection*{🧠 Modeling Approach}
-\begin{itemize}
-    \item \textbf{Binary Classification (Malware vs. Benign)}  
-          Supervised learning using LightGBM and XGBoost.  
-          Optional extension: unsupervised anomaly detection using One-Class SVM or Isolation Forest.
-    \item \textbf{Multiclass Classification (Malware Family Prediction)}  
-          Supervised learning using LightGBM and XGBoost; baselines include Logistic Regression and Random Forest.
-\end{itemize}
+## 📊 Data Collection  
 
-\textbf{Class imbalance handling:}
-\begin{itemize}
-    \item Apply \textbf{SMOTE} (Synthetic Minority Oversampling Technique) to balance underrepresented families.
-    \item Use \textbf{class weighting} in LightGBM/XGBoost to adjust loss contributions.
-    \item Evaluate per-family \textbf{F1-scores} to ensure balanced model performance.
-\end{itemize}
+### Datasets  
+- **[BODMAS](https://whyisyoung.github.io/BODMAS/)** → 57K malware + 77K benign PE files, labeled by family, with features and metadata.  
+- **[EMBER](https://github.com/elastic/ember)** → ~2M PE samples with extracted static features for binary classification (malware vs benign).  
 
-\textbf{Evaluation Metrics:}
-\begin{itemize}
-    \item Binary: AUC, Accuracy, Precision, Recall, F1-score, Confusion Matrix
-    \item Multiclass: Accuracy, Macro F1-score, Confusion Matrix
-\end{itemize}
+### Planned Usage  
+Due to computational constraints, the first phase will focus on the **BODMAS dataset (~130K samples)**.  
+If time and resources permit, a second phase will use a **10% subset of EMBER (~200K samples)** — balanced 50% benign / 50% malware — to improve generalization and cross-dataset robustness.  
 
----
+### Predictor & Target Variables  
+- **Predictor variables (features):**  
+  - File metadata (size, entropy, virtual size)  
+  - Imported functions and libraries  
+  - Section-level features (names, sizes, entropies)  
+  - String statistics (count, average length, entropy)  
 
-\subsection*{📈 Data Visualization}
-Planned visualizations:
-\begin{itemize}
-    \item Histograms (file size, entropy)
-    \item Malware family distribution charts
-    \item ROC curves for binary classifiers
-    \item Confusion matrices for multiclass predictions
-    \item Feature importance rankings
-\end{itemize}
+- **Target variables:**  
+  - `malicious_label` → 1 = malware, 0 = benign  
+  - `malware_family` → e.g., Trojan, Worm, Backdoor, Ransomware  
 
 ---
 
-\subsection*{🧪 Test Plan}
-\begin{itemize}
-    \item Dataset partitioning will follow a \textbf{chronological split} to reflect real-world malware evolution:
-    \begin{itemize}
-        \item Train: older samples (e.g., 2017–2019)
-        \item Test: newer samples (e.g., 2020–2021)
-    \end{itemize}
-    \item Standard 80\% / 20\% division within this temporal split.
-    \item Cross-validation with AUC as the main metric.
-    \item Per-family evaluation for multiclass models.
-\end{itemize}
+## 🧠 Modeling Approach  
+
+### Binary Classification → Malware vs Benign  
+- **Algorithms:** LightGBM, XGBoost  
+- *(Optional extension)*: Unsupervised anomaly detection (One-Class SVM, Isolation Forest)  
+
+### Multiclass Classification → Malware Family Prediction  
+- **Algorithms:** LightGBM, XGBoost  
+- **Baselines:** Logistic Regression, Random Forest  
+
+### Handling Class Imbalance  
+- Apply **SMOTE** (Synthetic Minority Oversampling Technique) for underrepresented families.  
+- Use **class weighting** in LightGBM/XGBoost to adjust loss contributions.  
+
+### Evaluation Metrics  
+- **Binary:** AUC, Accuracy, Precision, Recall, F1, Confusion Matrix  
+- **Multiclass:** Accuracy, Macro F1, Confusion Matrix  
 
 ---
 
-\subsection*{🔗 References}
-\begin{itemize}
-    \item BODMAS Dataset: \href{https://whyisyoung.github.io/BODMAS/}{https://whyisyoung.github.io/BODMAS/}
-    \item EMBER Dataset: \href{https://github.com/elastic/ember}{https://github.com/elastic/ember}
-\end{itemize}
+## 📈 Data Visualization  
+Planned visualizations include:  
+- Histograms (file size, entropy)  
+- Malware-family distribution charts  
+- ROC curves for binary classifiers  
+- Confusion matrices for multiclass results  
+- Feature-importance rankings  
+
+---
+
+## 🧪 Test Plan  
+- Dataset partitioning will follow a **chronological split** to better reflect real-world malware evolution:  
+  - **Train:** older samples (e.g., 2017 – 2019)  
+  - **Test:** newer samples (e.g., 2020 – 2021)  
+- Within that split, maintain a standard **80 / 20 ratio**.  
+- Apply cross-validation with AUC as the main performance metric.  
+- Evaluate per-family metrics for multiclass predictions.  
+
+---
+
+## 🔗 References  
+- BODMAS Dataset → [https://whyisyoung.github.io/BODMAS/](https://whyisyoung.github.io/BODMAS/)  
+- EMBER Dataset → [https://github.com/elastic/ember](https://github.com/elastic/ember)  
