@@ -1,0 +1,12 @@
+# Ignore dataset files
+data/
+!data/README.md
+
+# Ignore models if large
+models/*.pkl
+
+# Ignore temp files
+__pycache__/
+*.log
+*.DS_Store
+*.ipynb_checkpoints/
