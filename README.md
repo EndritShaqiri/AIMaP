@@ -1,111 +1,90 @@
-# AIMaP
-🛡️ AIMaP – Artificially Intelligent Malware Predictor
-📌 Project Description
+# 🛡️ AIMaP – Artificially Intelligent Malware Predictor  
 
-AIMaP (Artificially Intelligent Malware Predictor) is a machine learning–based malware detection system. Its goal is to analyze Windows Portable Executable (PE) files and:
+## 📌 Project Description  
+**AIMaP** (Artificially Intelligent Malware Predictor) is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and:  
 
-Predict the probability that a file is malicious.
+- 🔍 Predict the probability that a file is malicious.  
+- 🧩 If malicious, classify which **malware family** (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.  
 
-If malicious, classify which malware family (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.
+This project represents the defender’s counterpart to [**AIMaL**](https://github.com/EndritShaqiri/AIMaL).  
+Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
+It follows the complete data-science lifecycle: *data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment* of a lightweight demo interface.
 
-This project represents the defender’s counterpart to AIMaL (Artificially Intelligent Malware Launcher). Instead of launching and mutating malware, AIMaP leverages data science to detect and label malicious files with high accuracy.
+---
 
-AIMaP will follow the complete data science lifecycle: data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment of a lightweight demo interface.
+## 🎯 Goals  
+- Train ML models to output **malicious probability** for unknown files.  
+- Extend classification to **malware families** using multiclass models.  
+- Provide **explainability** through feature importance and visualizations.  
+- Deploy a web demo for file upload that returns, for example:  
+  - Probability: 92% malicious  
+  - Predicted Family: Trojan (confidence 81%)  
 
-🎯 Project Goals
+---
 
-Train ML models to output malicious probability for unknown files.
+## 📊 Data Collection  
 
-Extend classification to malware families using multiclass models.
+### Datasets  
+- **[BODMAS](https://whyisyoung.github.io/BODMAS/)** → 57K malware + 77K benign PE files, labeled by family, with features and metadata.  
+- **[EMBER](https://github.com/elastic/ember)** → ~2M PE samples with extracted static features for binary classification (malware vs benign).  
 
-Provide explainability through feature importance and visualizations.
+### Planned Usage  
+Due to computational constraints, the first phase will focus on the **BODMAS dataset (~130K samples)**.  
+If time and resources permit, a second phase will use a **10% subset of EMBER (~200K samples)** — balanced 50% benign / 50% malware — to improve generalization and cross-dataset robustness.  
 
-Deliver results in a clean, reproducible pipeline hosted on GitHub.
+### Predictor & Target Variables  
+- **Predictor variables (features):**  
+  - File metadata (size, entropy, virtual size)  
+  - Imported functions and libraries  
+  - Section-level features (names, sizes, entropies)  
+  - String statistics (count, average length, entropy)  
 
-(Optional) Deploy a simple one-page web interface for file prediction.
+- **Target variables:**  
+  - `malicious_label` → 1 = malware, 0 = benign  
+  - `malware_family` → e.g., Trojan, Worm, Backdoor, Ransomware  
 
-📊 Data Collection
+---
 
-We will use two major malware datasets:
+## 🧠 Modeling Approach  
 
-EMBER 2018 → ~1.1M PE samples with extracted static features for binary classification (malware vs benign).
+### Binary Classification → Malware vs Benign  
+- **Algorithms:** LightGBM, XGBoost  
+- *(Optional extension)*: Unsupervised anomaly detection (One-Class SVM, Isolation Forest)  
 
-BODMAS → 57K malware + 77K benign PE files, labeled by family, with features and metadata.
+### Multiclass Classification → Malware Family Prediction  
+- **Algorithms:** LightGBM, XGBoost  
+- **Baselines:** Logistic Regression, Random Forest  
 
-These datasets include:
+### Handling Class Imbalance  
+- Apply **SMOTE** (Synthetic Minority Oversampling Technique) for underrepresented families.  
+- Use **class weighting** in LightGBM/XGBoost to adjust loss contributions.  
 
-File metadata (size, entropy, virtual size).
+### Evaluation Metrics  
+- **Binary:** AUC, Accuracy, Precision, Recall, F1, Confusion Matrix  
+- **Multiclass:** Accuracy, Macro F1, Confusion Matrix  
 
-Imported functions & libraries.
+---
 
-Section-level features (names, sizes, entropy).
+## 📈 Data Visualization  
+Planned visualizations include:  
+- Histograms (file size, entropy)  
+- Malware-family distribution charts  
+- ROC curves for binary classifiers  
+- Confusion matrices for multiclass results  
+- Feature-importance rankings  
 
-String statistics (count, average length, entropy).
+---
 
-🧠 Modeling Approach
+## 🧪 Test Plan  
+- Dataset partitioning will follow a **chronological split** to better reflect real-world malware evolution:  
+  - **Train:** older samples (e.g., 2017 – 2019)  
+  - **Test:** newer samples (e.g., 2020 – 2021)  
+- Within that split, maintain a standard **80 / 20 ratio**.  
+- Apply cross-validation with AUC as the main performance metric.  
+- Evaluate per-family metrics for multiclass predictions.  
 
-Binary classification (Malware vs Benign) using LightGBM/XGBoost.
+---
 
-Multiclass classification (Malware Family) for malicious samples.
-
-Baseline models (Logistic Regression, Random Forest) will be tested first, followed by advanced gradient-boosting methods.
-
-Evaluation Metrics:
-
-Binary: AUC, Accuracy, Precision, Recall, F1, Confusion Matrix.
-
-Multiclass: Accuracy, Macro F1, Confusion Matrix.
-
-📈 Data Visualization
-
-We will use visualizations to compare malware vs benign distributions and family-level patterns:
-
-Histograms (file size, entropy).
-
-Malware family distribution charts.
-
-ROC curves for binary models.
-
-Confusion matrices for multiclass results.
-
-Feature importance rankings.
-
-🧪 Test Plan
-
-Split datasets into 80% training / 20% testing.
-
-Validate models using cross-validation and AUC scores.
-
-Report per-family metrics for classification.
-
-Compare performance across EMBER and BODMAS subsets.
-
-🗓️ Project Timeline
-
-Week 1–2: Dataset collection, exploration, cleaning.
-
-Week 3–4: Baseline models for binary detection.
-
-Week 5–6: LightGBM/XGBoost binary classifier.
-
-Week 7: Extend to malware family classification.
-
-Week 8–9: Visualizations, feature importance, testing.
-
-Week 10: Final polish, documentation, presentation prep.
-
-⚙️ Deliverables
-
-GitHub repo with:
-
-README.md (proposal, midterm, final report).
-
-Scripts/notebooks for data prep, modeling, and evaluation.
-
-Visualizations (ROC, confusion matrices, feature importance).
-
-Midterm + Final presentation videos.
-
-(Optional) Streamlit web demo (localhost) to upload a file and get:
-Probability: 92% malicious  
-Predicted Family: Trojan (confidence 81%)  
+## 🔗 References  
+- BODMAS Dataset → [https://whyisyoung.github.io/BODMAS/](https://whyisyoung.github.io/BODMAS/)  
+- EMBER Dataset → [https://github.com/elastic/ember](https://github.com/elastic/ember)  
