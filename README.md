@@ -1,90 +1,115 @@
 # 🛡️ AIMaP – Artificially Intelligent Malware Predictor  
 
-## 📌 Project Description  
-**AIMaP** (Artificially Intelligent Malware Predictor) is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and:  
-
-- 🔍 Predict the probability that a file is malicious.  
-- 🧩 If malicious, classify which **malware family** (e.g., Trojan, Ransomware, Backdoor) it most likely belongs to.  
-
-This project represents the defender’s counterpart to [**AIMaL**](https://github.com/EndritShaqiri/AIMaL).  
-Instead of launching and mutating malware, AIMaP leverages data science to **detect and label malicious files** with high accuracy.  
-It follows the complete data-science lifecycle: *data collection, cleaning, feature extraction, visualization, modeling, evaluation, and deployment* of a lightweight demo interface.
+🎥 **Midterm Presentation (5 min)** → *[...]*  
 
 ---
 
-## 🎯 Goals  
-- Train ML models to output **malicious probability** for unknown files.  
-- Extend classification to **malware families** using multiclass models.  
-- Provide **explainability** through feature importance and visualizations.  
-- Deploy a web demo for file upload that returns, for example:  
-  - Probability: 92% malicious  
-  - Predicted Family: Trojan (confidence 81%)  
+## 📌 Overview  
+
+**AIMaP (Artificially Intelligent Malware Predictor)** is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and predict whether a file is **malicious or benign**.  
+
+The final goal is to build a lightweight, explainable AI-powered antivirus that can take any `.exe` file and output something like:  
+> **Probability:** 92% malicious  **Predicted Family:** Trojan (confidence 81%)
 
 ---
 
-## 📊 Data Collection  
+## 🧩 Work Completed So Far  
 
-### Datasets  
-- **[BODMAS](https://whyisyoung.github.io/BODMAS/)** → 57K malware + 77K benign PE files, labeled by family, with features and metadata.  
-- **[EMBER](https://github.com/elastic/ember)** → ~2M PE samples with extracted static features for binary classification (malware vs benign).  
+### 1️⃣ Data & Features  
+- **Dataset:** BODMAS (≈130K PE samples: malware + benign).  
+- Each file is represented by **2,381 static features** extracted from PE structure, section info, imports, exports, and string statistics.  
+- Working primarily with the official **BODMAS metadata** (feature matrix + labels).  
 
-### Planned Usage  
-Due to computational constraints, the first phase will focus on the **BODMAS dataset (~130K samples)**.  
-If time and resources permit, a second phase will use a **10% subset of EMBER (~200K samples)** — balanced 50% benign / 50% malware — to improve generalization and cross-dataset robustness.  
+### 2️⃣ Data Processing  
+- Loaded, cleaned, and normalized all features.  
+- Applied an **80/20 train-test split** with stratification.  
+- Scaled features using `StandardScaler` to standardize distributions.  
 
-### Predictor & Target Variables  
-- **Predictor variables (features):**  
-  - File metadata (size, entropy, virtual size)  
-  - Imported functions and libraries  
-  - Section-level features (names, sizes, entropies)  
-  - String statistics (count, average length, entropy)  
+### 3️⃣ Modeling – LightGBM Baseline  
+A baseline binary classifier was trained to distinguish **malware (1)** vs **benign (0)** files.  
 
-- **Target variables:**  
-  - `malicious_label` → 1 = malware, 0 = benign  
-  - `malware_family` → e.g., Trojan, Worm, Backdoor, Ransomware  
+**Model configuration:**
+- `n_estimators=300`
+- `learning_rate=0.05`
+- `num_leaves=64`
+- `subsample=0.8`
+- `colsample_bytree=0.8`
+- `class_weight="balanced"`
 
----
+**Performance (BODMAS Test Set):**
 
-## 🧠 Modeling Approach  
+| Metric | Score |
+|---------|-------|
+| ✅ Accuracy | **0.9977** |
+| ✅ F1-score | **0.9972** |
+| ✅ AUC | **0.9999** |
 
-### Binary Classification → Malware vs Benign  
-- **Algorithms:** LightGBM, XGBoost  
-- *(Optional extension)*: Unsupervised anomaly detection (One-Class SVM, Isolation Forest)  
-
-### Multiclass Classification → Malware Family Prediction  
-- **Algorithms:** LightGBM, XGBoost  
-- **Baselines:** Logistic Regression, Random Forest  
-
-### Handling Class Imbalance  
-- Apply **SMOTE** (Synthetic Minority Oversampling Technique) for underrepresented families.  
-- Use **class weighting** in LightGBM/XGBoost to adjust loss contributions.  
-
-### Evaluation Metrics  
-- **Binary:** AUC, Accuracy, Precision, Recall, F1, Confusion Matrix  
-- **Multiclass:** Accuracy, Macro F1, Confusion Matrix  
+> These near-perfect results confirm that the model captures strong discriminative features between benign and malicious executables.
 
 ---
 
-## 📈 Data Visualization  
-Planned visualizations include:  
-- Histograms (file size, entropy)  
-- Malware-family distribution charts  
-- ROC curves for binary classifiers  
-- Confusion matrices for multiclass results  
-- Feature-importance rankings  
+## 💻 Streamlit Web App Prototype  
+
+A functional **Streamlit web demo** (`app.py`) has been developed.  
+
+### ✅ Current Features:
+- Upload `.npz` / `.npy` **BODMAS feature files** or raw `.exe` binaries.  
+- For `.exe` files, the app automatically extracts the 2,381 features, scales them, and runs prediction through the LightGBM model.  
+- Displays the **malware probability** and confidence score.
+
+Example output for a test binary:
+> *Predicted malware probability: 78.42%*
 
 ---
 
-## 🧪 Test Plan  
-- Dataset partitioning will follow a **chronological split** to better reflect real-world malware evolution:  
-  - **Train:** older samples (e.g., 2017 – 2019)  
-  - **Test:** newer samples (e.g., 2020 – 2021)  
-- Within that split, maintain a standard **80 / 20 ratio**.  
-- Apply cross-validation with AUC as the main performance metric.  
-- Evaluate per-family metrics for multiclass predictions.  
+## 📊 Preliminary Visualizations  
+
+| Visualization | Key Insight |
+|---------------|--------------|
+| **Entropy distribution** | Malware samples exhibit higher entropy (>7.5 bits). |
+| **File size histogram** | Malware tends to be smaller on average than benign files. |
+| **Class ratio** | ~57K malware vs 77K benign — roughly balanced. |
+| **ROC Curve** | AUC ≈ 0.9999 confirms excellent model performance. |
+
+*(Screenshots and plots are shown in the midterm video presentation.)*
 
 ---
 
-## 🔗 References  
-- BODMAS Dataset → [https://whyisyoung.github.io/BODMAS/](https://whyisyoung.github.io/BODMAS/)  
-- EMBER Dataset → [https://github.com/elastic/ember](https://github.com/elastic/ember)  
+## 🚀 Next Steps  
+
+1. **Multiclass Family Classification**  
+   - Extend binary classifier to predict malware families (Trojan, Worm, Backdoor, Ransomware).  
+
+2. **Feature Explainability**  
+   - Add SHAP analysis to highlight which features contribute most to predictions.  
+
+3. **Cross-Dataset Robustness (EMBER)**  
+   - Integrate a 10% subset of the **EMBER dataset (~200K samples)** for additional training and generalization testing.  
+
+4. **Enhanced Streamlit App**  
+   - Improve UI for `.exe` uploads, include confidence gauges, visual feature breakdowns, and prediction explanations.
+
+---
+
+## 🧭 Current Takeaways  
+
+- The baseline LightGBM model achieves **>99% accuracy** on BODMAS metadata.  
+- Random executable uploads return realistic probability scores (e.g., 2–3% for legit software).  
+- Data normalization and stratified splitting were critical for consistent results.  
+- The project is modular, well-documented, and ready for expansion to multiclass malware classification and EMBER integration.  
+
+---
+
+
+---
+
+## ⚙️ How to Run  
+
+1️⃣ **Clone the repository**
+```bash
+git clone https://github.com/EndritShaqiri/AIMaP
+cd AIMaP
+cd notebooks
+streamlit run app.py
+
+
