@@ -64,12 +64,11 @@ Example output for a test binary:
 
 ## 📊 Preliminary Visualizations  
 
-| Visualization | Key Insight |
-|---------------|--------------|
-| **Entropy distribution** | Malware samples exhibit higher entropy (>7.5 bits). |
-| **File size histogram** | Malware tends to be smaller on average than benign files. |
-| **Class ratio** | ~57K malware vs 77K benign — roughly balanced. |
-| **ROC Curve** | AUC ≈ 0.9999 confirms excellent model performance. |
+<img width="462" height="391" alt="image" src="https://github.com/user-attachments/assets/d0b92315-c8c7-45ae-9167-d5bc5cd2031a" />
+<img width="458" height="391" alt="image" src="https://github.com/user-attachments/assets/90276b89-6ad0-48f5-8d4d-0335de0963e3" />
+<img width="789" height="940" alt="image" src="https://github.com/user-attachments/assets/a6b17217-6291-406a-9738-b354818a36b9" />
+
+
 
 *(Screenshots and plots are shown in the midterm video presentation.)*
 
