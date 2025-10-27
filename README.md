@@ -105,7 +105,6 @@ Example output for a test binary:
 
 ## ⚙️ How to Run  
 
-1️⃣ **Clone the repository**
 ```bash
 git clone https://github.com/EndritShaqiri/AIMaP
 cd AIMaP
