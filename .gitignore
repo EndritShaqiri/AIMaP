@@ -4,6 +4,7 @@ data/
 
 # Ignore models if large
 models/*.pkl
+*.bin
 
 # Ignore temp files
 __pycache__/
