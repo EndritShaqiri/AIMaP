@@ -1,13 +1,24 @@
-# Ignore dataset files
-data/
-!data/README.md
+############################
+# Ignore ALL datasets
+############################
+data/*
+!data/README.md      # keep only README
 
-# Ignore models if large
+############################
+# Ignore models (optional)
+############################
 models/*.pkl
-*.bin
+models/*.pt
+models/*.bin
+models/*.txt
+models/*.dat
 
-# Ignore temp files
+############################
+# Python cache / junk
+############################
 __pycache__/
+*.pyc
+*.pyo
 *.log
 *.DS_Store
 *.ipynb_checkpoints/
