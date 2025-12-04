@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>AIMaP – Artificially Intelligent Malware Predictor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="header-content">
+        <div class="logo">
+            <div class="logo-text">
+            <h1>AIMaP</h1>
+            </div>
+        </div>
+        <nav class="nav-links">
+            <a href="#" id="aboutLink">About</a>
+        </nav>
+    </div>
+</div>
+
+<!-- Upload Page -->
+<div class="upload-page" id="uploadPage">
+    <div class="upload-container">
+        <h2>File <span class="highlight">Analysis</span></h2>
+        <p>Scan a file using AIMaP - Artificially Intelligent Malware Predictor model</p>
+        
+        <div class="upload-box" id="dropzone">
+            <div class="upload-icon">☁️</div>
+            <h3>Drag & drop files or <span id="browse">Browse</span></h3>
+        </div>
+        
+        <input type="file" id="fileInput" hidden />
+    </div>
+</div>
+
+<!-- Analysis Report Page -->
+<div class="report-page" id="reportPage">
+    <div class="report-banner">
+        <h2>Analysis <span class="highlight">Report</span></h2>
+    </div>
+    
+    <div class="report-container">
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="backButton">Scan another file</button>
+            <button class="btn btn-secondary" id="rescanButton">🔄 Rescan</button>
+            <button class="btn btn-tertiary" id="downloadButton">⬇ Download</button>
+        </div>
+        
+        <div class="report-content">
+            <div class="score-section">
+                <div class="score-circle">
+                    <svg width="140" height="140">
+                        <circle cx="70" cy="70" r="60" class="score-bg"></circle>
+                        <circle cx="70" cy="70" r="60" class="score-fg" id="scoreFg"></circle>
+                    </svg>
+                    <div class="score-text">
+                        <div>
+                            <span class="score-number" id="scoreNumber">100</span><span class="score-percent">%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="score-label">Label</div>
+                <div class="verdict-label verdict-malicious" id="verdictLabel">Malware</div>
+            </div>
+            
+            <div class="details-section">
+                <table class="info-table" id="infoTable">
+                    <!-- Will be populated by JavaScript -->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Page -->
+<div class="about-page" id="aboutPage">
+    <div class="about-banner">
+        <h2>About AIMaP</h2>
+    </div>
+    
+    <div class="about-container">
+        <div class="about-content">
+            <h3>ABOUT AIMaP</h3>
+            
+            <p>
+                AIMaP (Artificially Intelligent Malware Predictor) is an AI-powered malware analysis engine designed to deliver high-accuracy threat detection and malware family classification. It analyzes PE files using static features such as entropy, imports, section metadata, and structural patterns.
+            </p>
+            
+            <p>
+                AIMaP's machine-learning models were trained on over 5 million real-world samples collected from VirusTotal in 2024, covering thousands of malware families and extensive benign software distributions.
+            </p>
+            
+            <p>The system was trained on:</p>
+            
+            <ul>
+                <li>LightGBM for binary malware detection</li>
+                <li>A Deep Neural Network for malware family prediction</li>
+            </ul>
+            
+            <p>
+                When a file is uploaded, AIMaP extracts static PE features, computes cryptographic hashes, and produces a detailed probabilistic assessment of maliciousness, along with family classification when applicable.
+            </p>
+            
+            <a href="#" class="back-to-home" id="backToHome">← Back to Home</a>
+        </div>
+    </div>
+</div>
+
+<!-- Loader Overlay -->
+<div class="loader-overlay" id="loaderOverlay">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <div class="loader-text">Analyzing file...</div>
+    </div>
+</div>
+
+<script>
+// Elements
+const uploadPage = document.getElementById("uploadPage");
+const reportPage = document.getElementById("reportPage");
+const aboutPage = document.getElementById("aboutPage");
+const loaderOverlay = document.getElementById("loaderOverlay");
+const dropzone = document.getElementById("dropzone");
+const browse = document.getElementById("browse");
+const fileInput = document.getElementById("fileInput");
+const backButton = document.getElementById("backButton");
+const aboutLink = document.getElementById("aboutLink");
+const backToHome = document.getElementById("backToHome");
+
+const scoreFg = document.getElementById("scoreFg");
+const scoreNumber = document.getElementById("scoreNumber");
+const verdictLabel = document.getElementById("verdictLabel");
+const infoTable = document.getElementById("infoTable");
+
+// Score circle setup
+const radius = 60;
+const circumference = 2 * Math.PI * radius;
+scoreFg.style.strokeDasharray = circumference;
+scoreFg.style.strokeDashoffset = circumference;
+
+function setScore(percent) {
+    const offset = circumference - (percent / 100) * circumference;
+    scoreFg.style.strokeDashoffset = offset;
+    scoreNumber.textContent = percent.toFixed(1);
+    
+    // Update color and label based on threat level
+    if (percent < 30) {
+        scoreFg.style.stroke = "#27ae60";
+        verdictLabel.className = "verdict-label verdict-clean";
+        verdictLabel.textContent = "Benign";
+    } else if (percent < 70) {
+        scoreFg.style.stroke = "#f39c12";
+        verdictLabel.className = "verdict-label verdict-suspicious";
+        verdictLabel.textContent = "Suspicious";
+    } else {
+        scoreFg.style.stroke = "#e74c3c";
+        verdictLabel.className = "verdict-label verdict-malicious";
+        verdictLabel.textContent = "Malware";
+    }
+}
+
+function updateInfoTable(result, extra) {
+    infoTable.innerHTML = `
+        <tr>
+            <td>MD5</td>
+            <td>${extra.md5}</td>
+        </tr>
+        <tr>
+            <td>SHA1</td>
+            <td>${extra.sha1}</td>
+        </tr>
+        <tr>
+            <td>SHA256</td>
+            <td>${extra.sha256}</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td class="regular">${extra.size_kb} KB</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td class="regular">${result.filename ?? "N/A"}</td>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td class="regular">PE</td>
+        </tr>
+        <tr>
+            <td>TrID</td>
+            <td class="regular">${extra.imports} imports | ${extra.sections} sections</td>
+        </tr>
+        <tr>
+            <td>Predicted Family</td>
+            <td class="regular">${result.family ?? "N/A"}</td>
+        </tr>
+        <tr>
+            <td>Family Confidence</td>
+            <td class="regular">${result.family_confidence ? (result.family_confidence * 100).toFixed(2) + '%' : "N/A"}</td>
+        </tr>
+        <tr>
+            <td>Submission date</td>
+            <td class="regular">${new Date().toLocaleString()}</td>
+        </tr>
+        <tr>
+            <td>Last scan</td>
+            <td class="regular">${new Date().toLocaleString()}</td>
+        </tr>
+    `;
+}
+
+async function analyzeFile(file) {
+    if (!file) return;
+    
+    // Show loader
+    loaderOverlay.style.display = "flex";
+    
+    try {
+        // Upload file to backend
+        const form = new FormData();
+        form.append("file", file);
+
+        const res = await fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            body: form
+        });
+
+        const result = await res.json();
+
+        // Calculate file metadata
+        const arrayBuffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+
+        const crypto = await window.crypto.subtle.digest("SHA-256", bytes);
+        const sha256 = Array.from(new Uint8Array(crypto)).map(b => b.toString(16).padStart(2,"0")).join("");
+
+        // Calculate entropy
+        const freq = {};
+        for (let b of bytes) freq[b] = (freq[b] || 0) + 1;
+        const entropy = Object.values(freq).reduce((acc, f) => {
+            const p = f / bytes.length;
+            return acc - p * Math.log2(p);
+        }, 0);
+
+        const extra = {
+            size_kb: (result.size / 1024).toFixed(2),
+            entropy: entropy.toFixed(3),
+            imports: result.imports ?? "N/A",
+            sections: result.sections ?? "N/A",
+            md5: result.md5 ?? "N/A",
+            sha1: result.sha1 ?? "N/A",
+            sha256: result.sha256 ?? sha256
+        };
+
+        // Update UI
+        setScore((result.malicious_probability * 100));
+        updateInfoTable(result, extra);
+
+        // Switch to report page
+        loaderOverlay.style.display = "none";
+        uploadPage.style.display = "none";
+        reportPage.style.display = "block";
+        
+    } catch (error) {
+        loaderOverlay.style.display = "none";
+        alert("Error analyzing file: " + error.message);
+        console.error(error);
+    }
+}
+
+// Drag & Drop
+dropzone.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropzone.style.borderColor = "#764ba2";
+});
+
+dropzone.addEventListener("dragleave", e => {
+    e.preventDefault();
+    dropzone.style.borderColor = "#667eea";
+});
+
+dropzone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropzone.style.borderColor = "#667eea";
+    const file = e.dataTransfer.files[0];
+    analyzeFile(file);
+});
+
+// Browse files
+browse.onclick = () => fileInput.click();
+
+fileInput.onchange = () => {
+    analyzeFile(fileInput.files[0]);
+};
+
+// Back button
+backButton.onclick = () => {
+    uploadPage.style.display = "flex";
+    reportPage.style.display = "none";
+    fileInput.value = "";
+};
+
+// Rescan button (placeholder)
+const rescanButton = document.getElementById("rescanButton");
+if (rescanButton) {
+    rescanButton.onclick = () => {
+        alert("Rescan functionality - to be implemented");
+    };
+}
+
+// Download button (placeholder)
+const downloadButton = document.getElementById("downloadButton");
+if (downloadButton) {
+    downloadButton.onclick = () => {
+        alert("Download report functionality - to be implemented");
+    };
+}
+
+// About page navigation
+aboutLink.onclick = (e) => {
+    e.preventDefault();
+    uploadPage.style.display = "none";
+    reportPage.style.display = "none";
+    aboutPage.style.display = "block";
+};
+
+backToHome.onclick = (e) => {
+    e.preventDefault();
+    uploadPage.style.display = "flex";
+    reportPage.style.display = "none";
+    aboutPage.style.display = "none";
+};
+
+</script>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <span class="footer-text" style="color: #333;">© 2025 AIMaP - Artificially Intelligent Malware Predictor</span>
+        <div class="footer-links">
+            <a href="https://github.com/EndritShaqiri/AIMaP" target="_blank" rel="noopener noreferrer">
+                <span>GitHub</span>
+            </a>
+            <span style="color: rgba(255, 255, 255, 0.3);">|</span>
+            <a href="https://www.linkedin.com/in/endrit-shaqiri-a681051a8/" target="_blank" rel="noopener noreferrer">
+                <span>LinkedIn</span>
+            </a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
