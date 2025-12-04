@@ -51,7 +51,7 @@
     <div class="report-container">
         <div class="action-buttons">
             <button class="btn btn-primary" id="backButton">Scan another file</button>
-            <button class="btn btn-secondary" id="rescanButton">🔄 Rescan</button>
+            <button class="btn btn-secondary" id="rescanButton">↻ Rescan</button>
             <button class="btn btn-tertiary" id="downloadButton">⬇ Download</button>
         </div>
         
@@ -141,6 +141,9 @@ const scoreNumber = document.getElementById("scoreNumber");
 const verdictLabel = document.getElementById("verdictLabel");
 const infoTable = document.getElementById("infoTable");
 
+// Upload state management
+let isUploading = false;
+
 // Score circle setup
 const radius = 60;
 const circumference = 2 * Math.PI * radius;
@@ -220,6 +223,15 @@ function updateInfoTable(result, extra) {
 async function analyzeFile(file) {
     if (!file) return;
     
+    // Prevent multiple simultaneous uploads
+    if (isUploading) {
+        alert("Please wait for the current analysis to complete before uploading another file.");
+        return;
+    }
+    
+    // Set upload flag
+    isUploading = true;
+    
     // Show loader
     loaderOverlay.style.display = "flex";
     
@@ -273,6 +285,9 @@ async function analyzeFile(file) {
         loaderOverlay.style.display = "none";
         alert("Error analyzing file: " + error.message);
         console.error(error);
+    } finally {
+        // Reset upload flag
+        isUploading = false;
     }
 }
 

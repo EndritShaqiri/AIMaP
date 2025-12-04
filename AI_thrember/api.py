@@ -1,22 +1,73 @@
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from predictor import AIMaPPredictor
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+# ===============================
+# RATE LIMITING
+# ===============================
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from fastapi.responses import PlainTextResponse
 
-# Allow all origins (simple setup)
+limiter = Limiter(key_func=get_remote_address)
+
+# ===============================
+# APP INIT
+# ===============================
+app = FastAPI()
+app.state.limiter = limiter
+
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_handler(request, exc):
+    return PlainTextResponse("Too many requests. Slow down.", status_code=429)
+
+
+# ===============================
+# CORS (keep or restrict later)
+# ===============================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],     # allow all domains
+    allow_origins=["*"],     # change to your domain when deploying
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+
+# ===============================
+# Predictor + Security Constants
+# ===============================
 predictor = AIMaPPredictor()
 
+MAX_FILE_SIZE = 300 * 1024 * 1024   # 300MB max
+
+
+# ===============================
+# PREDICT ENDPOINT (Rate Limited)
+# ===============================
 @app.post("/predict")
-async def predict_file(file: UploadFile):
+@limiter.limit("5/minute")          # <--- main protection (5 scans per minute per IP)
+async def predict_file(request: Request, file: UploadFile = File(...)):
+
+    filename = file.filename.lower()
+
+    # Read file in memory
     bytez = await file.read()
+
+    # ------------------------------
+    # SIZE LIMIT CHECK
+    # ------------------------------
+    if len(bytez) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large. Max allowed size is {MAX_FILE_SIZE // (1024*1024)} MB."
+        )
+
+    # ------------------------------
+    # RUN PREDICTION
+    # ------------------------------
     result = predictor.predict(bytez)
+    result["filename"] = filename
+
     return result
