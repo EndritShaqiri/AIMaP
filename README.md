@@ -1,113 +1,132 @@
-# 🛡️ AIMaP – Artificially Intelligent Malware Predictor  
+# AIMaP — Artificially Intelligent Malware Predictor
 
-🎥 **Midterm Presentation (5 min)** → *[https://www.youtube.com/watch?v=KvH3b2yNvA8]*  
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-aim--sec.com-blue?style=for-the-badge&logo=github)](https://aim-sec.com/)
 
----
+AIMaP is an AI-powered malware analysis engine designed to deliver high-accuracy malicious-file detection and malware family classification. It analyzes PE files (EXE, DLL, SYS), PDFs, and ELF binaries (with highest accuracy on PE files) using static features such as entropy, imports, section metadata, structural patterns, and authenticated signatures.
 
-## 📌 Overview  
+When a file is uploaded, AIMaP extracts static features, computes cryptographic hashes, and generates a probabilistic assessment of maliciousness. If the file is malicious, AIMaP additionally predicts the most likely malware family.
 
-**AIMaP (Artificially Intelligent Malware Predictor)** is a machine-learning–based malware detection system designed to analyze Windows Portable Executable (PE) files and predict whether a file is **malicious or benign**.  
+AIMaP's machine-learning models were trained on over 5 million real-world samples collected from VirusTotal (2023–2024) using the EMBER2024 dataset, covering thousands of malware families and a large distribution of benign software.
 
-The final goal is to build a lightweight, explainable AI-powered antivirus that can take any `.exe` file and output something like:  
-> **Probability:** 92% malicious  **Predicted Family:** Trojan (confidence 81%)
+## Setup & Installation - MAKEFILE
 
----
+### Prerequisites
+- **Python 3.10**
+- **OpenSSL 1.1.1**
 
-## 🧩 Work Completed So Far  
-
-### 1️⃣ Data & Features  
-- **Dataset:** BODMAS (≈130K PE samples: malware + benign).  
-- Each file is represented by **2,381 static features** extracted from PE structure, section info, imports, exports, and string statistics.  
-- Working primarily with the official **BODMAS metadata** (feature matrix + labels).  
-
-### 2️⃣ Data Processing  
-- Loaded, cleaned, and normalized all features.  
-- Applied an **80/20 train-test split** with stratification.  
-- Scaled features using `StandardScaler` to standardize distributions.  
-
-### 3️⃣ Modeling – LightGBM Baseline  
-A baseline binary classifier was trained to distinguish **malware (1)** vs **benign (0)** files.  
-
-**Model configuration:**
-- `n_estimators=300`
-- `learning_rate=0.05`
-- `num_leaves=64`
-- `subsample=0.8`
-- `colsample_bytree=0.8`
-- `class_weight="balanced"`
-
-**Performance (BODMAS Test Set):**
-
-| Metric | Score |
-|---------|-------|
-| ✅ Accuracy | **0.9977** |
-| ✅ F1-score | **0.9972** |
-| ✅ AUC | **0.9999** |
-
-> These near-perfect results confirm that the model captures strong discriminative features between benign and malicious executables.
-
----
-
-## 💻 Streamlit Web App Prototype  
-
-A functional **Streamlit web demo** (`app.py`) has been developed.  
-
-### ✅ Current Features:
-- Upload `.npz` / `.npy` **BODMAS feature files** or raw `.exe` binaries.  
-- For `.exe` files, the app automatically extracts the 2,381 features, scales them, and runs prediction through the LightGBM model.  
-- Displays the **malware probability** and confidence score.
-
-Example output for a test binary:
-> *Predicted malware probability: 78.42%*
-
----
-
-## 📊 Preliminary Visualizations  
-
-<img width="462" height="391" alt="image" src="https://github.com/user-attachments/assets/d0b92315-c8c7-45ae-9167-d5bc5cd2031a" />
-<img width="458" height="391" alt="image" src="https://github.com/user-attachments/assets/90276b89-6ad0-48f5-8d4d-0335de0963e3" />
-<img width="789" height="940" alt="image" src="https://github.com/user-attachments/assets/a6b17217-6291-406a-9738-b354818a36b9" />
-
-
-
-*(Screenshots and plots are shown in the midterm video presentation.)*
-
----
-
-## 🚀 Next Steps  
-
-1. **Multiclass Family Classification**  
-   - Extend binary classifier to predict malware families (Trojan, Worm, Backdoor, Ransomware).  
-
-2. **Feature Explainability**  
-   - Add SHAP analysis to highlight which features contribute most to predictions.  
-
-3. **Cross-Dataset Robustness (EMBER)**  
-   - Integrate a 10% subset of the **EMBER dataset (~200K samples)** for additional training and generalization testing.  
-
-4. **Enhanced Streamlit App**  
-   - Improve UI for `.exe` uploads, include confidence gauges, visual feature breakdowns, and prediction explanations.
-
----
-
-## 🧭 Current Takeaways  
-
-- The baseline LightGBM model achieves **>99% accuracy** on BODMAS metadata.  
-- Random executable uploads return realistic probability scores (e.g., 2–3% for legit software).  
-- Data normalization and stratified splitting were critical for consistent results.  
-- The project is modular, well-documented, and ready for expansion to multiclass malware classification and EMBER integration.  
-
----
-
-
----
-
-## ⚙️ How to Run  
-
+### Quick Start
 ```bash
 git clone https://github.com/EndritShaqiri/AIMaP
 cd AIMaP
-cd notebooks
-streamlit run app.py
+```
 
+```bash
+make setup    # Install dependencies
+make run      # Start the application
+```
 
+  **Can't set up locally? Try the live deployment: [[AIM-Sec]](https://aim-sec.com/)**
+
+## 🎯 Live Demo
+
+** [Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
+
+## Dataset Statistics
+
+| File Type | Malicious + Benign (Weekly) | Train Total | Test Total |
+|-----------|-----------------------------|-------------|------------|
+| Win32     | 30,000                      | 3,120,000   | 720,000    |
+| Win64     | 10,000                      | 1,040,000   | 240,000    |
+| .NET      | 5,000                       | 520,000     | 120,000    |
+| APK       | 4,000                       | 516,000     | 96,000     |
+| PDF       | 1,000                       | 104,000     | 24,000     |
+| ELF       | 500                         | 52,000      | 12,000     |
+
+- **Total training set:** 5,252,000 files
+- **Total test set:** 1,212,000 files
+- **Dataset size:** ~50 GB
+
+EMBER2024 samples were collected daily from September 24th 2023 to December 14th 2024. This ensures fresh, modern malware and reduces dataset staleness.
+
+Near-duplicate files were identified by using the Trend Micro Locality Sensitive Hashing (TLSH), and dropped if the distance of the new file’s TLSH was smaller then 30 to any already file in the dataset.
+
+## Data Vectorization & Splitting
+
+Features are vectorized, stored, and normalized (`model.py`, `binary_vectorizer.py`, `family_vectorizer.ipynb`).
+
+Instead of a typical 80/20 split, AIMaP uses a chronological split across 64 weeks:
+
+- **Weeks 1–52 → training** (older samples)
+- **Weeks 53–64 → testing** (newer samples)
+
+Family labels are assigned using ClarAVy (used by EMBER2024), which applies Bayesian inference and provides both a family label and a confidence score.
+
+All features for the neural network are standardized with StandardScaler.
+
+## Feature Extraction
+
+AIMaP uses a static-analysis PE feature extractor (`PEFeatureExtractor` in `features.py`) that converts each binary into a fixed-length vector of **2,568 features**.
+
+Extracted feature groups include:
+
+- **General File Information:** file size, entropy, valid PE flag, first 4 bytes
+- **Byte Histogram (256-dim):** useful for detecting packing and encryption
+- **Byte-Entropy Histogram:** joint byte/entropy patterns across sliding windows
+- **String Features:** URLs, IPs, registry keys, PowerShell commands, download/connect indicators, etc.
+- **Section Information:** raw size, virtual size, entropy, RWX flags, overlay stats
+- **Import Features:** DLL names and imported APIs (hashed to fixed dimension)
+- **Authenticode Signature Features:** certificate count, validity, signer data
+- and much more.
+
+These features collectively capture structural, statistical, and semantic file characteristics.
+
+## Models
+
+AIMaP uses two separate machine-learning models:
+
+1. **LightGBM** for binary malware detection
+2. **Deep Neural Network (PyTorch MLP)** for malware family classification
+
+Both models and their configuration are documented in:  
+`/notebooks/aimap.ipynb`
+
+## Performance
+
+### Binary Classifier
+- **Test AUC:** 0.9981395167249398
+- **Average Precision:** 0.9982659016220766
+- Confusion matrix:
+
+ ![Binary Classifier Confusion Matrix](/pics/binary.png)
+
+### Family Classifier
+From 2,358 malware families, the top 50 families were selected for training.
+- **Train Accuracy:** 0.9359
+- **Validation Accuracy:** 0.9277
+- **Test Accuracy:** 0.8561
+- Confusion matrix:
+
+ <img src="/pics/family.png" width="75%" alt="Family Classifier Confusion Matrix">
+
+## Inference Pipeline
+
+The file `aimap_core.py` implements the entire inference pipeline, including:
+
+1. Loading all pre-trained models
+2. Extracting features from uploaded PE files
+3. Predicting maliciousness
+4. Predicting malware family (only if malicious)
+
+This module powers the backend used by the web interface.
+
+## Frontend
+
+All frontend code is located in `/web/`.  
+The JavaScript files handle uploading, API communication, and displaying model predictions.
+
+## Future Work
+
+While the binary classifier already achieves excellent results, future work will focus on:
+
+- Improving family-level classification
+- Expanding into behavior-type prediction
