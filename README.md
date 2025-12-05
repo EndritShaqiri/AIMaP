@@ -46,9 +46,9 @@ make run      # Start the application
 - **Total test set:** 1,212,000 files
 - **Dataset size:** ~50 GB
 
-Samples were collected daily from September 24th 2023 to December 14th 2024. This ensures fresh, modern malware and reduces dataset staleness.
+EMBER2024 samples were collected daily from September 24th 2023 to December 14th 2024. This ensures fresh, modern malware and reduces dataset staleness.
 
-To remove near-duplicate files, AIMaP used Trend Micro TLSH (Locality Sensitive Hashing). Any file whose TLSH distance was below 30 from an existing file was removed.
+Near-duplicate files were identified by using the Trend Micro Locality Sensitive Hashing (TLSH), and dropped if the distance of the new file’s TLSH was smaller then 30 to any already file in the dataset.
 
 ## Data Vectorization & Splitting
 
