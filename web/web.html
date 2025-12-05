@@ -38,7 +38,11 @@
             <h3>Drag & drop files or <span id="browse">Browse</span></h3>
         </div>
         
-        <input type="file" id="fileInput" hidden />
+        <p class="file-restriction-note">
+            Only .exe, .dll, .sys, and .pdf files are accepted for analysis.
+        </p>
+
+        <input type="file" id="fileInput" accept=".exe,.dll,.sys,.pdf" hidden />
     </div>
 </div>
 
@@ -186,22 +190,6 @@ function updateInfoTable(result, extra) {
             <td>${extra.sha256}</td>
         </tr>
         <tr>
-            <td>Size</td>
-            <td class="regular">${extra.size_kb} KB</td>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td class="regular">${result.filename ?? "N/A"}</td>
-        </tr>
-        <tr>
-            <td>Type</td>
-            <td class="regular">PE</td>
-        </tr>
-        <tr>
-            <td>TrID</td>
-            <td class="regular">${extra.imports} imports | ${extra.sections} sections</td>
-        </tr>
-        <tr>
             <td>Predicted Family</td>
             <td class="regular">${result.family ?? "N/A"}</td>
         </tr>
@@ -209,6 +197,17 @@ function updateInfoTable(result, extra) {
             <td>Family Confidence</td>
             <td class="regular">${result.family_confidence ? (result.family_confidence * 100).toFixed(2) + '%' : "N/A"}</td>
         </tr>
+        <tr>
+            <td>Size</td>
+            <td class="regular">${extra.size_kb} KB</td>
+        </tr>
+        <tr>
+            <td>TrID</td>
+            <td class="regular">${extra.imports} imports | ${extra.sections} sections</td>
+        </tr>
+        <tr>
+            <td>Entropy</td>
+            <td class="regular">${extra.entropy}</td>
         <tr>
             <td>Submission date</td>
             <td class="regular">${new Date().toLocaleString()}</td>
