@@ -10,7 +10,7 @@ AIMaP's machine-learning models were trained on over 5 million real-world sample
 
 ## 🎯 Live Demo
 
-**👉 [Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
+** [Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
 
 ## Dataset Statistics
 
@@ -77,7 +77,8 @@ Both models and their configuration are documented in:
 - **Test AUC:** 0.9981395167249398
 - **Average Precision:** 0.9982659016220766
 - Confusion matrix:
-  ![Binary Classifier Confusion Matrix](/pics/to/binary.png)
+
+ ![Binary Classifier Confusion Matrix](/pics/binary.png)
 
 ### Family Classifier
 From 2,358 malware families, the top 50 families were selected for training.
@@ -85,7 +86,8 @@ From 2,358 malware families, the top 50 families were selected for training.
 - **Validation Accuracy:** 0.9277
 - **Test Accuracy:** 0.8561
 - Confusion matrix:
-    ![Family Classifier Confusion Matrix](/pics/to/family.png)
+
+ <img src="/pics/family.png" width="75%" alt="Family Classifier Confusion Matrix">
 
 ## Inference Pipeline
 
