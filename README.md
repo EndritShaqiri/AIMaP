@@ -8,6 +8,25 @@ When a file is uploaded, AIMaP extracts static features, computes cryptographic 
 
 AIMaP's machine-learning models were trained on over 5 million real-world samples collected from VirusTotal (2023–2024) using the EMBER2024 dataset, covering thousands of malware families and a large distribution of benign software.
 
+## Setup & Installation - MAKEFILE
+
+### Prerequisites
+- **Python 3.10**
+- **OpenSSL 1.1.1**
+
+### Quick Start
+```bash
+git clone https://github.com/EndritShaqiri/AIMaP
+cd AIMaP
+```
+
+```bash
+make setup    # Install dependencies
+make run      # Start the application
+```
+
+  **Can't set up locally? Try the live deployment: [[AIM-Sec]](https://aim-sec.com/)**
+
 ## 🎯 Live Demo
 
 ** [Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
