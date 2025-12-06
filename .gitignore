@@ -5,15 +5,6 @@ data/*
 !data/README.md      # keep only README
 
 ############################
-# Ignore models (optional)
-############################
-models/*.pkl
-models/*.pt
-models/*.bin
-models/*.txt
-models/*.dat
-
-############################
 # Python cache / junk
 ############################
 __pycache__/
