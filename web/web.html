@@ -250,7 +250,7 @@ async function analyzeFile(file) {
         const arrayBuffer = await file.arrayBuffer();
         const bytes = new Uint8Array(arrayBuffer);
 
-        const crypto = await window.crypto.subtle.digest("SHA-256", bytes);
+        //const crypto = await window.crypto.subtle.digest("SHA-256", bytes);
         const sha256 = Array.from(new Uint8Array(crypto)).map(b => b.toString(16).padStart(2,"0")).join("");
 
         // Calculate entropy
@@ -268,7 +268,7 @@ async function analyzeFile(file) {
             sections: result.sections ?? "N/A",
             md5: result.md5 ?? "N/A",
             sha1: result.sha1 ?? "N/A",
-            sha256: result.sha256 ?? sha256
+            sha256: result.sha256 ?? "N/A",
         };
 
         // Update UI
