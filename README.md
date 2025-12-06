@@ -10,11 +10,6 @@ AIMaP's machine-learning models were trained on over 5 million real-world sample
 
 ## Setup & Installation - MAKEFILE
 
-### Prerequisites
-- **Python 3.10**
-- **OpenSSL 1.1.1**
-
-### Quick Start
 ```bash
 git clone https://github.com/EndritShaqiri/AIMaP
 cd AIMaP
