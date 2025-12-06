@@ -25,7 +25,7 @@ make run      # Start the application
 
 ## 🎯 Live Demo
 
-** [Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
+**[Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
 
 ## Dataset Statistics
 
