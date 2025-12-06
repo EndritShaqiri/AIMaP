@@ -90,6 +90,14 @@ AIMaP uses two separate machine-learning models:
 Both models and their configuration are documented in:  
 `/notebooks/aimap.ipynb`
 
+### Example Raw Sample (Before Vectorization)
+
+Below is an example entry from the dataset before feature extraction and vectorization.
+It shows the COLLAPSED structure of a raw malware record, including hashes, metadata,
+histograms, entropy features, and string statistics.
+
+ ![One JSON sample](/pics/js.jpg)
+
 ## Performance
 
 ### Binary Classifier
