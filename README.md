@@ -21,7 +21,7 @@ make run      # Start the application
 # open 0.0.0.0:8080/web.html
 ```
 
-  ** Try the live deployment: [[AIM-Sec]](https://aim-sec.com/)**
+  **Try the live deployment: [AIM-Sec](https://aim-sec.com/)**
 
 ## 🎯 Live Demo
 
