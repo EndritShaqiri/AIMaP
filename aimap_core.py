@@ -12,7 +12,7 @@ from AI_thrember.features import PEFeatureExtractor
 # ======================================================================
 # Paths
 # ======================================================================
-BASE_DIR = Path(r"C:\Users\Thinkbook 14\AIMaP\models")
+BASE_DIR = Path(r"C:\Users\Thinkbook 14\AIMaP")
 MODEL_DIR = BASE_DIR / "models"
 
 _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

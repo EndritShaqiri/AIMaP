@@ -24,8 +24,8 @@ from collections import Counter, OrderedDict
 import numpy as np
 import pefile
 from sklearn.feature_extraction import FeatureHasher
-import signify
-from signify.authenticode import SignedPEFile
+#import signify
+#from signify.authenticode import SignedPEFile
 from datetime import datetime
 
 
@@ -930,7 +930,7 @@ class AuthenticodeSignature(FeatureType):
             "latest_signing_time": 0,
             "signing_time_diff": 0,
         }
-        try:
+        '''try:
             signed_pe = SignedPEFile(io.BytesIO(bytez))
             for signed_data in signed_pe.iter_signed_datas():
                 raw_obj["num_certs"] += 1
@@ -967,7 +967,7 @@ class AuthenticodeSignature(FeatureType):
             raw_obj["parse_error"] = 1
         except KeyError:
             raw_obj["parse_error"] = 1
-        return raw_obj
+        return raw_obj'''
 
     def process_raw_features(self, raw_obj):
         if not raw_obj:
