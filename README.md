@@ -1,6 +1,7 @@
 # AIMaP — Artificially Intelligent Malware Predictor
 
 [![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-aim--sec.com-blue?style=for-the-badge&logo=github)](https://aim-sec.com/)
+[![Presentation Video](https://img.shields.io/badge/🎥_Presentation-YouTube-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=kviXzG3ecHo)
 
 AIMaP is an AI-powered malware analysis engine designed to deliver high-accuracy malicious-file detection and malware family classification. It analyzes PE files (EXE, DLL, SYS), PDFs, and ELF binaries (with highest accuracy on PE files) using static features such as entropy, imports, section metadata, structural patterns, and authenticated signatures.
 
