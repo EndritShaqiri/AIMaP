@@ -6,13 +6,14 @@ import lightgbm as lgb
 import json
 import hashlib
 from pathlib import Path
-from features import PEFeatureExtractor
+from .features import PEFeatureExtractor
 
 
 # ============================================================
 # Load paths
 # ============================================================
-MODEL_DIR = Path(r"C:\Users\Thinkbook 14\AIMaP\models")
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_DIR = BASE_DIR / "models"
 
 binary_model = lgb.Booster(model_file=str(MODEL_DIR / "aimap_binary_classifier.txt"))
 scaler = joblib.load(MODEL_DIR / "family_scaler.pkl")

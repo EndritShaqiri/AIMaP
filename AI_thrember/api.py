@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
-from predictor import AIMaPPredictor
+from .predictor import AIMaPPredictor
 from fastapi.middleware.cors import CORSMiddleware
 
 # ===============================

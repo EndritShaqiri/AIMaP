@@ -6,6 +6,7 @@
 VENV = venv
 
 # Python version required by the project
+PYTHON = python
 
 # ================================
 # SETUP: Create venv + Install deps
