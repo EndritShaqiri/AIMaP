@@ -27,7 +27,7 @@ def rate_limit_handler(request, exc):
 # ===============================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],     # change to your domain later
+    allow_origins=["*"],     # change
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,7 +38,7 @@ app.add_middleware(
 # ===============================
 predictor = AIMaPPredictor()
 
-MAX_FILE_SIZE = 300 * 1024 * 1024   # 300 MB
+MAX_FILE_SIZE = 20 * 1024 * 1024   # 20 MB
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {".exe", ".dll", ".sys", ".pdf"}
