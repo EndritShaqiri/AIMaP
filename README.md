@@ -129,6 +129,11 @@ This module powers the backend used by the web interface.
 All frontend code is located in `/web/`.  
 The JavaScript files handle uploading, API communication, and displaying model predictions.
 
+## Backend
+
+AIMaP exposes its inference engine through a **FastAPI** backend (api.py).
+The ```/predict``` endpoint accepts an uploaded file, extracts static features, and returns a JSON response containing: malicious probability, binary verdict, predicted malware family (if malicious), and family confidence score.
+
 ## Future Work
 
 While the binary classifier already achieves excellent results, future work will focus on:
