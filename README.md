@@ -62,7 +62,7 @@ All features for the neural network are standardized with StandardScaler.
 
 ## Feature Extraction
 
-AIMaP uses a static-analysis PE feature extractor (`PEFeatureExtractor` in `features.py`) that converts each binary into a fixed-length vector of **2,568 features**.
+AIMaP uses EMBER's static-analysis PE feature extractor (`PEFeatureExtractor` in `features.py`) that converts each binary into a fixed-length vector of **2,568 features**.
 
 Extracted feature groups include:
 
