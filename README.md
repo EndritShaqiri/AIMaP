@@ -8,10 +8,6 @@ When a file is uploaded, AIMaP extracts static features, computes cryptographic 
 
 AIMaP's machine-learning models were trained on over 5 million real-world samples collected from VirusTotal (2023–2024) using the EMBER2024 dataset, covering thousands of malware families and a large distribution of benign software.
 
-## 🎯 Live Demo
-
-**[Try AIMaP Now: https://aim-sec.com/](https://aim-sec.com/)**
-
 ## Dataset Statistics
 
 | File Type | Malicious + Benign (Weekly) | Train Total | Test Total |
